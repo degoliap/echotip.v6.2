@@ -1,38 +1,13 @@
-.App {
-  text-align: center;
+.active-nav-button {
+  background-color: #005bac !important; /* Samurai Blue как акцент */
+  color: #ffffff !important; /* Белый текст для контраста */
+  transition: all 0.3s ease; /* Плавная анимация */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.active-nav-button img {
+  filter: brightness(0) invert(1) !important; /* Инверсия иконки */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+button:active {
+  transform: scale(0.95);
 }
