@@ -29,32 +29,38 @@ export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
   const user = useSelector(selectUser);
-  const [theme, setTheme] = useState(() => {
-    const isTelegram = window.Telegram?.WebApp;
-    if (isTelegram && user?.theme === 'auto') {
-      return window.Telegram.WebApp.colorScheme === 'dark' ? 'dark' : 'light';
-    }
-    return user?.theme === 'dark' ? 'dark' : 'light';
-  });
+  const [theme, setTheme] = useState(themes.light); // Начальное значение по умолчанию
 
   useEffect(() => {
     if (user?.theme === 'auto' && window.Telegram?.WebApp) {
       setTheme(
-        window.Telegram.WebApp.colorScheme === 'dark' ? 'dark' : 'light'
+        window.Telegram.WebApp.colorScheme === 'dark'
+          ? themes.dark
+          : themes.light
       );
+    } else if (user) {
+      setTheme(user?.theme === 'dark' ? themes.dark : themes.light);
     } else {
-      setTheme(user?.theme === 'dark' ? 'dark' : 'light');
+      // Гость: используем тему браузера
+      const prefersDark = window.matchMedia(
+        '(prefers-color-scheme: dark)'
+      ).matches;
+      setTheme(prefersDark ? themes.dark : themes.light);
     }
-    document.body.style.backgroundColor = themes[theme].background;
-    document.body.style.color = themes[theme].textPrimary;
-  }, [user?.theme, theme]);
+    // Применяем стили только после установки темы
+    if (theme) {
+      document.body.style.backgroundColor = theme.background;
+      document.body.style.color = theme.textPrimary;
+    }
+  }, [user, theme]); // Добавили theme в зависимости
 
   const toggleTheme = (newTheme) => {
-    setTheme(newTheme); // Просто обновляем тему в состоянии
+    const selectedTheme = newTheme === 'dark' ? themes.dark : themes.light;
+    setTheme(selectedTheme);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme: themes[theme], toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
